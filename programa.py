@@ -1,4 +1,4 @@
-CATEGORIAS_SOPORTE = [
+TIPOS_CONSULTA = [
     "matrícula",
     "pagos",
     "constancia",
@@ -6,51 +6,56 @@ CATEGORIAS_SOPORTE = [
     "otro"
 ]
 
-def verificar_categoria(categoria_ingresada):
-    # Procesa el texto quitando espacios y pasándolo a minúsculas
-    categoria_normalizada = categoria_ingresada.strip().lower()
+def validar_codigo(codigo):
+    return bool(codigo.strip()) and len(codigo.strip()) >= 8
+
+def validar_tipo(tipo):
+    tipo_limpio = tipo.strip().lower()
     
-    if categoria_normalizada in CATEGORIAS_SOPORTE:
+    if tipo_limpio in TIPOS_CONSULTA:
         return True
     else:
         return False
 
-def verificar_id(id_usuario):
-    # Comprueba que no esté vacío y cumpla la longitud mínima
-    return bool(id_usuario.strip()) and len(id_usuario.strip()) >= 8
+def calcular_prioridad(tipo):
+    tipo = tipo.strip().lower()
 
-def registrar_ticket():
-    # 1. Solicita primero el nombre del usuario
-    nombre_usuario = input("Nombre del estudiante: ")
+    if tipo == "matrícula" or tipo == "plataforma":
+        return "Alta"
+    elif tipo == "pagos":
+        return "Media"
+    else:
+        return "Baja"
+
+def registrar_solicitud():
+    codigo = input("Código del estudiante: ")
     
-    # 2. Solicita y valida el identificador/código
-    id_estudiante = input("Código del estudiante: ")
-    
-    if verificar_id(id_estudiante):
+    if validar_codigo(codigo):
         print("Código válido.")
     else:
         print("Código inválido. Debe tener al menos 8 caracteres.")
         return 
-
-    # 3. Muestra las opciones y valida la categoría elegida
-    print("Opciones de consulta: matrícula, pagos, constancia, plataforma, otro")
-    categoria_elegida = input("Tipo de consulta: ")
     
-    if verificar_categoria(categoria_elegida):
+    nombre = input("Nombre del estudiante: ")
+    
+    print("Opciones de consulta: matrícula, pagos, constancia, plataforma, otro")
+    tipo = input("Tipo de consulta: ")
+    
+    if validar_tipo(tipo):
         print("Tipo válido.")
+        # Calculamos la prioridad solo si el tipo es válido
+        prioridad = calcular_prioridad(tipo)
     else:
         print("Tipo de consulta inválido. Debes elegir una opción de la lista.")
         return
         
-    # 4. Solicita el detalle final
-    detalle_ticket = input("Descripción: ")
+    descripcion = input("Descripción: ")
 
-    # Resumen final de la solicitud
     print("\nSolicitud registrada.")
-    print(f"Código: {id_estudiante}")
-    print(f"Nombre: {nombre_usuario}")
-    print(f"Tipo: {categoria_elegida}")
-    print(f"Descripción: {detalle_ticket}")
+    print(f"Código: {codigo}")
+    print(f"Nombre: {nombre}")
+    print(f"Tipo: {tipo}")
+    print(f"Prioridad: {prioridad}")  # Agregamos la prioridad al resultado final
+    print(f"Descripción: {descripcion}")
 
-# Ejecución de la función principal
-registrar_ticket()
+registrar_solicitud()
