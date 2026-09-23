@@ -9,6 +9,10 @@ TIPOS_CONSULTA = [
 def validar_codigo(codigo):
     return bool(codigo.strip()) and len(codigo.strip()) >= 8
 
+# Agregamos la nueva función para validar textos vacíos
+def validar_texto(texto):
+    return bool(texto.strip())
+
 def validar_tipo(tipo):
     tipo_limpio = tipo.strip().lower()
     
@@ -33,29 +37,60 @@ def registrar_solicitud():
     if validar_codigo(codigo):
         print("Código válido.")
     else:
-        print("Código inválido. Debe tener al menos 8 caracteres.")
+        print("Error: el código debe tener al menos 8 caracteres.")
         return 
     
     nombre = input("Nombre del estudiante: ")
+    
+    # Validamos el nombre
+    if validar_texto(nombre):
+        print("Nombre válido.")
+    else:
+        print("Error: el nombre no puede estar vacío.")
+        return
     
     print("Opciones de consulta: matrícula, pagos, constancia, plataforma, otro")
     tipo = input("Tipo de consulta: ")
     
     if validar_tipo(tipo):
-        print("Tipo válido.")
-        # Calculamos la prioridad solo si el tipo es válido
+        print("Tipo de consulta válido.")
         prioridad = calcular_prioridad(tipo)
     else:
-        print("Tipo de consulta inválido. Debes elegir una opción de la lista.")
+        print("Error: tipo de consulta no válido.")
         return
         
     descripcion = input("Descripción: ")
+    
+    # Validamos la descripción
+    if validar_texto(descripcion):
+        print("Descripción válida.")
+    else:
+        print("Error: la descripción no puede estar vacía.")
+        return
 
     print("\nSolicitud registrada.")
     print(f"Código: {codigo}")
     print(f"Nombre: {nombre}")
     print(f"Tipo: {tipo}")
-    print(f"Prioridad: {prioridad}")  # Agregamos la prioridad al resultado final
+    print(f"Prioridad: {prioridad}") 
     print(f"Descripción: {descripcion}")
 
-registrar_solicitud()
+
+# Menú que dejaste en tu código
+def menu_principal():
+    while True:
+        print("\n=== SOPORTE ACADÉMICO ===")
+        print("1. Registrar solicitud")
+        print("2. Salir")
+        
+        opcion = input("Elige una opción (1 o 2): ")
+        
+        if opcion == "1":
+            registrar_solicitud()
+        elif opcion == "2":
+            print("Saliendo del sistema... ¡Hasta luego!")
+            break  
+        else:
+            print("Opción no válida. Por favor, ingresa 1 o 2.")
+
+menu_principal()
