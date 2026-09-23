@@ -1,27 +1,24 @@
-# 1. FUNCIONES AUXILIARES DE VALIDACIÓN
-# Ámbito: Reciben cadenas locales y devuelven booleanos. No acceden al exterior.
 def validar_codigo(codigo):
     return bool(codigo.strip()) and len(codigo.strip()) >= 8
+
 
 def validar_texto(texto):
     return bool(texto.strip())
 
+
 def validar_tipo(tipo, lista_permitida):
-    tipo_limpio = tipo.strip().lower()
-    return tipo_limpio in lista_permitida
+    return tipo.strip().lower() in lista_permitida
 
 
-# 2. LÓGICA DE NEGOCIO Y SALIDA
-# Ámbito: Reciben únicamente los datos necesarios mediante sus parámetros.
 def calcular_prioridad(tipo):
-    tipo_limpio = tipo.strip().lower()
-
-    if tipo_limpio in ["matrícula", "plataforma"]:
+    t = tipo.strip().lower()
+    if t == "matrícula" or t == "plataforma":
         return "Alta"
-    elif tipo_limpio == "pagos":
+    elif t == "pagos":
         return "Media"
     else:
         return "Baja"
+
 
 def mostrar_resumen(codigo, nombre, tipo, descripcion, prioridad):
     print("\n----- RESUMEN DE SOLICITUD -----")
@@ -33,71 +30,99 @@ def mostrar_resumen(codigo, nombre, tipo, descripcion, prioridad):
     print("--------------------------------")
 
 
-# 3. GESTIÓN DEL REGISTRO
-# Ámbito: Sus variables (codigo, nombre, tipo, etc.) son exclusivamente internas.
 def registrar_solicitud():
-    tipos_consulta = [
-        "matrícula",
-        "pagos",
-        "constancia",
-        "plataforma",
-        "otro"
-    ]
-    
-    codigo = input("Código del estudiante: ")
-    if validar_codigo(codigo):
-        print("Código válido.")
-    else:
-        print("Error: el código debe tener al menos 8 caracteres.")
-        return 
-    
-    nombre = input("Nombre del estudiante: ")
-    if validar_texto(nombre):
-        print("Nombre válido.")
-    else:
-        print("Error: el nombre no puede estar vacío.")
-        return
-    
-    print("Opciones de consulta: matrícula, pagos, constancia, plataforma, otro")
-    tipo = input("Tipo de consulta: ")
-    if validar_tipo(tipo, tipos_consulta):
-        print("Tipo de consulta válido.")
+    tipos_consulta = ["matrícula", "pagos", "constancia", "plataforma", "otro"]
+    contador = 0
+
+    while True:
+        print(f"\n--- Registro {contador + 1} ---")
+
+        codigo = input("Código del estudiante: ")
+        if not validar_codigo(codigo):
+            print("Error: el código debe tener al menos 8 caracteres.")
+            continue
+
+        nombre = input("Nombre del estudiante: ")
+        if not validar_texto(nombre):
+            print("Error: el nombre no puede estar vacío.")
+            continue
+
+        print("Opciones de consulta: matrícula, pagos, constancia, plataforma, otro")
+        tipo = input("Tipo de consulta: ")
+        if not validar_tipo(tipo, tipos_consulta):
+            print("Error: tipo de consulta no válido.")
+            continue
+
+        descripcion = input("Descripción: ")
+        if not validar_texto(descripcion):
+            print("Error: la descripción no puede estar vacía.")
+            continue
+
         prioridad = calcular_prioridad(tipo)
-    else:
-        print("Error: tipo de consulta no válido.")
-        return
-        
-    descripcion = input("Descripción: ")
-    if validar_texto(descripcion):
-        print("Descripción válida.")
-    else:
-        print("Error: la descripción no puede estar vacía.")
-        return
+        contador += 1
 
-    print("\nSolicitud registrada.")
-    # Los datos internos se envían explícitamente a través de argumentos
-    mostrar_resumen(codigo, nombre, tipo, descripcion, prioridad)
+        print(f"\n¡Solicitud {contador} registrada correctamente!")
+        mostrar_resumen(codigo, nombre, tipo, descripcion, prioridad)
+
+        # Validación para registrar mínimo 3
+        if contador < 3:
+            print(f"(Aviso: Debes ingresar al menos 3 solicitudes. Llevas {contador})")
+        else:
+            resp = input("\n¿Quieres registrar otra solicitud? (s/n): ").strip().lower()
+            if resp != "s":
+                print(f"\nFin del registro. Total procesadas: {contador}")
+                break
 
 
-# 4. CONTROL DEL MENÚ PRINCIPAL
-# Ámbito: Maneja únicamente el flujo de la interfaz inicial.
+def ejecutar_pruebas():
+    tipos_consulta = ["matrícula", "pagos", "constancia", "plataforma", "otro"]
+
+    print("\n--- EJECUTANDO PRUEBAS ---")
+
+    # 1. Datos válidos
+    val_cod = validar_codigo("20231005")
+    val_nom = validar_texto("Juan Pérez")
+    print("1. Datos válidos:", "OK" if (val_cod and val_nom) else "ERROR")
+
+    # 2. Datos vacíos
+    cod_vac = validar_codigo("")
+    nom_vac = validar_texto("   ")
+    print("2. Datos vacíos:", "OK" if (not cod_vac and not nom_vac) else "ERROR")
+
+    # 3. Tipo incorrecto
+    tipo_bad = validar_tipo("becas", tipos_consulta)
+    print("3. Tipo incorrecto:", "OK" if not tipo_bad else "ERROR")
+
+    # 4. Prioridad alta
+    p_alta1 = calcular_prioridad("matrícula")
+    p_alta2 = calcular_prioridad("plataforma")
+    print("4. Prioridad Alta:", "OK" if (p_alta1 == "Alta" and p_alta2 == "Alta") else "ERROR")
+
+    # 5. Prioridad baja
+    p_baja1 = calcular_prioridad("constancia")
+    p_baja2 = calcular_prioridad("otro")
+    print("5. Prioridad Baja:", "OK" if (p_baja1 == "Baja" and p_baja2 == "Baja") else "ERROR")
+
+
 def menu_principal():
     while True:
         print("\n=== SOPORTE ACADÉMICO ===")
         print("1. Registrar solicitud")
-        print("2. Salir")
-        
-        opcion = input("Elige una opción (1 o 2): ")
-        
+        print("2. Correr pruebas")
+        print("3. Salir")
+
+        opcion = input("Elige una opción (1-3): ")
+
         if opcion == "1":
             registrar_solicitud()
         elif opcion == "2":
-            print("Saliendo del sistema... ¡Hasta luego!")
-            break  
+            ejecutar_pruebas()
+        elif opcion == "3":
+            print("Saliendo...")
+            break
         else:
-            print("Opción no válida. Por favor, ingresa 1 o 2.")
+            print("Opción inválida. Intenta de nuevo.")
 
 
-# PUNTO DE ENTRADA DEL PROGRAMA
 if __name__ == "__main__":
     menu_principal()
