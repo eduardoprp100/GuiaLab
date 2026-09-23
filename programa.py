@@ -9,9 +9,18 @@ TIPOS_CONSULTA = [
 def validar_codigo(codigo):
     return bool(codigo.strip()) and len(codigo.strip()) >= 8
 
-# Agregamos la nueva función para validar textos vacíos
 def validar_texto(texto):
     return bool(texto.strip())
+
+# Agregamos la función de resumen aquí, tal como pediste
+def mostrar_resumen(codigo, nombre, tipo, descripcion, prioridad):
+    print("\n----- RESUMEN DE SOLICITUD -----")
+    print(f"Código: {codigo}")
+    print(f"Nombre: {nombre}")
+    print(f"Tipo de consulta: {tipo}")
+    print(f"Descripción: {descripcion}")
+    print(f"Prioridad: {prioridad}")
+    print("--------------------------------")
 
 def validar_tipo(tipo):
     tipo_limpio = tipo.strip().lower()
@@ -42,7 +51,6 @@ def registrar_solicitud():
     
     nombre = input("Nombre del estudiante: ")
     
-    # Validamos el nombre
     if validar_texto(nombre):
         print("Nombre válido.")
     else:
@@ -61,22 +69,17 @@ def registrar_solicitud():
         
     descripcion = input("Descripción: ")
     
-    # Validamos la descripción
     if validar_texto(descripcion):
         print("Descripción válida.")
     else:
         print("Error: la descripción no puede estar vacía.")
         return
 
+    # Aquí modificamos el final usando la nueva función
     print("\nSolicitud registrada.")
-    print(f"Código: {codigo}")
-    print(f"Nombre: {nombre}")
-    print(f"Tipo: {tipo}")
-    print(f"Prioridad: {prioridad}") 
-    print(f"Descripción: {descripcion}")
+    mostrar_resumen(codigo, nombre, tipo, descripcion, prioridad)
 
 
-# Menú que dejaste en tu código
 def menu_principal():
     while True:
         print("\n=== SOPORTE ACADÉMICO ===")
