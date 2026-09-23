@@ -1,28 +1,56 @@
-def validar_codigo_barras(codigo):
-    # Elimina espacios y verifica que sean solo números y tenga exactamente 12 dígitos
-    codigo_limpio = codigo.strip()
-    return codigo_limpio.isdigit() and len(codigo_limpio) == 12
+CATEGORIAS_SOPORTE = [
+    "matrícula",
+    "pagos",
+    "constancia",
+    "plataforma",
+    "otro"
+]
 
-def registrar_producto():
-    codigo = input("Código de barras del producto (12 dígitos): ")
+def verificar_categoria(categoria_ingresada):
+    # Procesa el texto quitando espacios y pasándolo a minúsculas
+    categoria_normalizada = categoria_ingresada.strip().lower()
     
-    if validar_codigo_barras(codigo):
-        print("✓ Código de barras válido.")
+    if categoria_normalizada in CATEGORIAS_SOPORTE:
+        return True
     else:
-        print("✗ Código inválido. Debe contener exactamente 12 números.")
-        return  # Interrumpe el flujo si el código no es válido
+        return False
 
-    nombre_producto = input("Nombre del producto: ")
-    categoria = input("Categoría: ")
-    precio = input("Precio ($): ")
+def verificar_id(id_usuario):
+    # Comprueba que no esté vacío y cumpla la longitud mínima
+    return bool(id_usuario.strip()) and len(id_usuario.strip()) >= 8
 
-    print("\n--- Producto Registrado con Éxito ---")
-    print(f"Código: {codigo.strip()}")
-    print(f"Producto: {nombre_producto}")
-    print(f"Categoría: {categoria}")
-    print(f"Precio: ${precio}")
+def registrar_ticket():
+    # 1. Solicita primero el nombre del usuario
+    nombre_usuario = input("Nombre del estudiante: ")
+    
+    # 2. Solicita y valida el identificador/código
+    id_estudiante = input("Código del estudiante: ")
+    
+    if verificar_id(id_estudiante):
+        print("Código válido.")
+    else:
+        print("Código inválido. Debe tener al menos 8 caracteres.")
+        return 
 
-# Ejemplo de uso
-registrar_producto()
+    # 3. Muestra las opciones y valida la categoría elegida
+    print("Opciones de consulta: matrícula, pagos, constancia, plataforma, otro")
+    categoria_elegida = input("Tipo de consulta: ")
+    
+    if verificar_categoria(categoria_elegida):
+        print("Tipo válido.")
+    else:
+        print("Tipo de consulta inválido. Debes elegir una opción de la lista.")
+        return
+        
+    # 4. Solicita el detalle final
+    detalle_ticket = input("Descripción: ")
 
-# Cambio de prueba
+    # Resumen final de la solicitud
+    print("\nSolicitud registrada.")
+    print(f"Código: {id_estudiante}")
+    print(f"Nombre: {nombre_usuario}")
+    print(f"Tipo: {categoria_elegida}")
+    print(f"Descripción: {detalle_ticket}")
+
+# Ejecución de la función principal
+registrar_ticket()
